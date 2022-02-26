@@ -35,7 +35,7 @@ public class promedioDeCalificaciones {
 	}//End Calcular Promedio
 	
 	@Test
-	public void calcularPromedioPor100Teclado() {
+	public void calcularPromedioPorTeclado() {
 		Scanner reader = new Scanner(System.in);
 		
 		do {
@@ -51,6 +51,7 @@ public class promedioDeCalificaciones {
 		calcularPromedio(resultado);
 		double result = calcularPromedioRetorno(87);
 		Reporter.log("El valor de retorno es: " + result,true);
+		reader.close();
 		
 	}//Por Teclado
 	
