@@ -26,3 +26,4 @@ ChromeDriver/chromedriver
 .DS_Store
 EdgeDriver/msedgedriver
 GekoDriver/geckodriver
+*Execution_Results
