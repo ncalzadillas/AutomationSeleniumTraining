@@ -26,14 +26,14 @@ public class PrimerScript {
 	@Test
 	public void primerScriptSelenium() {
 		
-		driver = openBrowser("firefox");
+		driver = openBrowser("chrome");
 		
-		System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"//ChromeDriver//chromedriver");
-		ChromeOptions option = new ChromeOptions();
-		option.addArguments("--start-maximized");
-		option.addArguments("--incognito");
+		//System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"//ChromeDriver//chromedriver");
+		//ChromeOptions option = new ChromeOptions();
+		//option.addArguments("--start-maximized");
+		//option.addArguments("--incognito");
 		
-		WebDriver driver = new ChromeDriver(option);
+		//WebDriver driver = new ChromeDriver(option);
 		
 		String useNameString = "Admin";
 		String passwordString = "admin123";
@@ -99,7 +99,7 @@ public class PrimerScript {
 	public WebDriver geckoDriverConnection() {
 		
 		setDriverPaths();
-		System.setProperty("webdriver.chrome.driver", geckoDriver);
+		System.setProperty("webdriver.gecko.driver", geckoDriver);
 		FirefoxOptions option = new FirefoxOptions();
 		option.addArguments("--start-maximized");
 		option.addArguments("--incognito");
