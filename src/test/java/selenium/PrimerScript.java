@@ -11,6 +11,8 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
@@ -51,6 +53,17 @@ public class PrimerScript {
 		
 		WebElement login = driver.findElement(By.cssSelector("#btnLogin"));
 		login.click();
+		
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+		
+		//By link_welcome = By.id("welcome");
+		//WebElement test = driver.findElement(link_welcome);
+	
+		//wait.until(ExpectedConditions.visibilityOfElementLocated(link_welcome));
+		
+		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("welcome")));
+		
+		//WebElement link_welcome = driver.findElement(By.id("welcome"));
 		
 	}
 	
