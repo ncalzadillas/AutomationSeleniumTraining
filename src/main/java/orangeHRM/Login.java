@@ -35,5 +35,13 @@ public class Login extends Base{
 		verifyElementIsPresent(link_welcome);
 		
 	}
+	
+	public void loginError(String user, String password) {
+		type(user,txt_userName);
+		type(password, txt_password);
+		click(btn_login);
+		verifyElementIsPresent(text_errorMessage);
+		
+	}
 
 }
