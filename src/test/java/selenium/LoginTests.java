@@ -16,6 +16,8 @@ public class LoginTests {
 	String url = "https://opensource-demo.orangehrmlive.com/index.php/auth/login";
 	String usuario = "Admin";
 	String password = "admin123";
+	String incorrectUsuario = "Test";
+	String incorrectPassword = "Test123";
 	
 	@BeforeTest
 	public void initTest(ITestContext context) {
@@ -27,6 +29,11 @@ public class LoginTests {
 	@Test
 	public void accederCorrectamente() {
 		login.loginSuccess(usuario, password);
+	}
+	
+	@Test
+	public void wrongPassword() {
+		login.loginError(incorrectUsuario, incorrectPassword);
 	}
 
 }
