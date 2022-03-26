@@ -9,7 +9,9 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -21,7 +23,9 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 
@@ -266,11 +270,22 @@ public class Base {
 	 * @Description Escribir texto en web element
 	 * @author ncalzadillas
 	 * @date 03/19/2022
-	 * @param N/A
+	 * @param String, String
 	 * @return N/A
 	 */
 	public void reporter(String message, String value) {
 		Reporter.log(message + "<b> [ " + value + "] </b>", true);
+	}
+	
+	/**
+	 * @Description Escribir texto en web element
+	 * @author ncalzadillas
+	 * @date 03/19/2022
+	 * @param String
+	 * @return N/A
+	 */
+	public void reporter(String message) {
+		Reporter.log(message);
 	}
 	
 	/**
@@ -350,12 +365,119 @@ public class Base {
 			FileUtils.copyFile(srcFile, new File(fullPath));
 			//fullPath = "." + fullPath;
 			Reporter.log("*******El screenshot fue guardado en: " + fullPath+"***********", true);
-			Reporter.log("<br> <img src='"+ fullPath +"'height='400' width='400'/></br>",true);
+			Reporter.log("<br> <img src='"+ fullPath +"'height='800' width='800'/></br>",true);
 			
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 	
+	}
+	
+	/**
+	 * @Description Verificar un text esperado
+	 * @author ncalzadillas
+	 * @date 03/26/2022
+	 * @param String, String
+	 * @return N/A
+	 */
+	public void validateExpectedText(String expected, String actual) {
+		try {
+			Assert.assertEquals(expected, actual);
+			reporter("Expected text IS EQUAL to: [" + expected + "]", "Actual text IS EQUAL to: [" + actual + "]");
+		}catch(AssertionError e) {
+			//si no quiero que se detenga el script
+			//reporter("Expected text [" + expected + "] IS NOT EQUAL to: [" + actual + "]");
+			Assert.fail("Texts are not matching <b> expected: [ " + expected + "] and actual: [ " + actual + "] <b>");
+		}
+	}
+	
+	/**
+	 * @Description Verificar un text esperado
+	 * @author ncalzadillas
+	 * @date 03/26/2022
+	 * @param String, String
+	 * @return N/A
+	 */
+	public void selectElementByValue(By locator, String expectedText) {
+		List<WebElement> elements = findElements(locator);
+		
+		for(int i = 0; i<elements.size(); i++) {
+			
+			if(i>=elements.size()) {
+				Assert.fail("El elemento que buscas en la lista no existe: [" 
+						+ expectedText + "]");
+			}
+			
+			if(elements.get(i).getText().equals(expectedText)) {
+				reporter("Element in the list was clicked", elements.get(i).getText());
+				elements.get(i).click();
+				break;
+			}
+		}
+		
+	}
+	
+	/**
+	 * @Description Seleccionar elemento por index
+	 * @author ncalzadillas
+	 * @date 03/26/2022
+	 * @param By, int
+	 * @return N/A
+	 */
+	public void selectDropDownByIndex(By locator, int index) {
+		WebElement dropdown = findElement(locator);
+		Select action = new Select(dropdown);
+		
+		try {
+		action.selectByIndex(index);
+		reporter("Element was selected by Index", String.valueOf(index));
+		}catch(StaleElementReferenceException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}catch(NoSuchElementException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}
+	}
+	
+	/**
+	 * @Description Seleccionar elemento por index
+	 * @author ncalzadillas
+	 * @date 03/26/2022
+	 * @param By, int
+	 * @return N/A
+	 */
+	public void selectDropDownByValue(By locator, String value) {
+		WebElement dropdown = findElement(locator);
+		Select action = new Select(dropdown);
+		
+		try {
+		action.selectByValue(value);
+		reporter("Element was selected by value", value);
+		}catch(StaleElementReferenceException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}catch(NoSuchElementException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}
+	}
+	
+	/**
+	 * @Description Seleccionar elemento por index
+	 * @author ncalzadillas
+	 * @date 03/26/2022
+	 * @param By, int
+	 * @return N/A
+	 */
+	public void selectDropDownByVisibleText(By locator, String expectedText) {
+		WebElement dropdown = findElement(locator);
+		Select action = new Select(dropdown);
+		
+		try {
+		action.selectByVisibleText(expectedText);
+		reporter("Element was selected by Visible Text", expectedText);
+		}catch(StaleElementReferenceException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}catch(NoSuchElementException e) {
+			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
+		}
 	}
 
 }
