@@ -18,6 +18,7 @@ public class Login extends Base{
 	By text_errorResetPassword = By.className("message.warning.fadable");
 	By text_successResetPassword = By.xpath("//*[@id='divContent']/p");
 	By link_welcome = By.id("welcome");
+	By link_logout = By.xpath("//*[contains(@href,'logout')]");
 	
 	//Please contact HR admin in order to reset the password
 	//There is a password reset request already in the system.   
@@ -33,15 +34,27 @@ public class Login extends Base{
 		type(password, txt_password);
 		click(btn_login);
 		verifyElementIsPresent(link_welcome);
+		takeScreenShot();
 		
 	}
 	
-	public void loginError(String user, String password) {
+	public void loginError(String user, String password, String errorMessage) {
 		type(user,txt_userName);
 		type(password, txt_password);
 		click(btn_login);
 		verifyElementIsPresent(text_errorMessage);
+		validateExpectedText(errorMessage, getText(text_errorMessage));
+		takeScreenShot();
 		
+	}
+	
+	public void logout() {
+		verifyElementIsPresent(link_welcome);
+		click(link_welcome);
+		verifyElementIsPresent(link_logout);
+		takeScreenShot();
+		click(link_logout);
+		verifyElementIsPresent(txt_userName);
 	}
 
 }
