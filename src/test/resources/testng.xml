@@ -3,8 +3,16 @@
 <suite name="Acceso al Sistema">
   <test thread-count="5" name="Accesos">
 	<parameter name="browser" value="chrome"/>
+<groups>
+<run>
+<include name="smoke"/>
+<include name="regression"/>
+<include name="vacaciones"/>
+</run>
+</groups>
     <classes>
-      <class name="selenium.LoginTests"/>
+      <class name="selenium.LoginTestNoInstances"/>
+	<class name="selenium.LoginTests"/>
     </classes>
   </test> <!-- Accesos -->
 </suite> <!-- Acceso al Sistema -->

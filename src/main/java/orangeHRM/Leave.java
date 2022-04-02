@@ -16,8 +16,8 @@ public class Leave extends Base {
 	By txt_comments = By.id("assignleave_txtComment");
 	By btn_assign = By.id("assignBtn");
 	By btn_ok = By.id("confirmOkButton");
-	By text_errorMessage = By.className("message.warning.fadable");//Failed to Assign
-	By text_successMessage = By.className("message.success.fadable");//Successfully Assigned
+	By text_errorMessage = By.xpath("//*[@class='message warning fadable']");//Failed to Assign
+	By text_successMessage = By.xpath("//*[@class='message success fadable']");//Successfully Assigned
 	
 	
 	public Leave(WebDriver driver) {

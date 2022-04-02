@@ -2,9 +2,11 @@ package utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -29,6 +31,11 @@ import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.Reporter;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Base {
 	
 	private WebDriver driver;
@@ -37,6 +44,7 @@ public class Base {
 	private String chromeDriver;
 	private String edgeDriver;
 	private String geckoDriver;
+	public static Instances page = new Instances();
 	
 	/**
 	 * @Description Constructor sin parametros
@@ -214,6 +222,7 @@ public class Base {
 				Reporter.log("Driver can't be initialized. Browser is: + browserName: ", true);
 		}
 		
+		page = new Instances(driver);
 		context.setAttribute("WebDriver",driver);
 		return driver;
 	}
@@ -261,9 +270,34 @@ public class Base {
 	 * @param N/A
 	 * @return N/A
 	 */
+	public String getText(WebElement element) {
+		String text = element.getText();
+		reporter("El texto obtenido es: ",text);
+		return text;
+	}
+	
+	/**
+	 * @Description Escribir texto en web element
+	 * @author ncalzadillas
+	 * @date 03/19/2022
+	 * @param N/A
+	 * @return N/A
+	 */
 	public void click(By locator) {
 		Reporter.log("web Element was clicked");
 		findElement(locator).click();
+	}
+	
+	/**
+	 * @Description Escribir texto en web element
+	 * @author ncalzadillas
+	 * @date 03/19/2022
+	 * @param N/A
+	 * @return N/A
+	 */
+	public void click(WebElement element) {
+		Reporter.log("web Element was clicked");
+		element.click();
 	}
 	
 	/**
@@ -300,6 +334,18 @@ public class Base {
 		findElement(locator).sendKeys(inputText);
 		reporter("Fue ingresado",inputText);
 	}
+	/**
+	 * @Description Escribir texto en web element
+	 * @author ncalzadillas
+	 * @date 03/19/2022
+	 * @param N/A
+	 * @return N/A
+	 */
+	public void type(String inputText, WebElement element) {
+		element.clear();
+		element.sendKeys(inputText);
+		reporter("Fue ingresado",inputText);
+	}
 	
 	/**
 	 * @Description Escribir texto en web element
@@ -312,6 +358,19 @@ public class Base {
 		
 		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(5));
 		wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		reporter("El elemento existe","");
+	}
+	/**
+	 * @Description Escribir texto en web element
+	 * @author ncalzadillas
+	 * @date 03/19/2022
+	 * @param N/A
+	 * @return N/A
+	 */
+	public void verifyElementIsPresent(WebElement element) {
+		
+		WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(5));
+		wait.until(ExpectedConditions.visibilityOfAllElements(element));
 		reporter("El elemento existe","");
 	}
 	
@@ -479,5 +538,95 @@ public class Base {
 			Assert.fail("Cannot select element: [ " + dropdown.toString() + " ]");
 		}
 	}
+	
+	/**
+	* @throws N/A
+	* @Description quite driver session
+	* @Author Sergio Ramones
+	* @Date 28/03/2022
+	* @Parameter N/A
+	* @return N/A
+	* @implNote N/A
+	*/
+	public void closeBrowser() {
+	driver.quit();
+	}
+	
+	/**
+	* @throws N/A
+	* @Description This method is take today date plus the amount of days that you
+	* are give by parameter and returned
+	* @Author Sergio Ramones
+	* @Date 04-JUN-2021
+	* @Parameter int
+	* @return String
+	* @implNote N/A
+	*/
+	public String getDate(int amountDays) {
 
+		Date myDate = new Date();
+		DateFormat df = new SimpleDateFormat("YYYY-MM-dd");// ("YYYY-MM-dd"); MM/dd/YYYY
+
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(myDate);
+		cal.add(Calendar.DATE, amountDays);
+
+		myDate = cal.getTime();
+
+		String date = df.format(myDate);
+
+		return date;
+
+	 }
+	
+	/**
+	* @throws JsonGenerationException, JsonMappingException, IOException
+	* @Description Read JSON file
+	* @Author Sergio Ramones
+	* @Date 28/03/2022
+	* @Parameter String, String
+	* @return JsonNode
+	* @implNote nodeTree.path("fieldName").asText()
+	*/
+	public JsonNode readJsonFileByNode(String jsonpath, String nodeName) {
+		JsonNode nodeTree = null;
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			JsonNode root = mapper.readTree(new File(jsonpath));
+			// Get Name
+			nodeTree = root.path(nodeName);
+		} catch (JsonGenerationException e) {
+			e.printStackTrace();
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return nodeTree;
+	}
+	
+	/**
+	* @throws JsonGenerationException, JsonMappingException, IOException
+	* @Description Read JSON file
+	* @Author Sergio Ramones
+	* @Date 28/03/2022
+	* @Parameter String, String
+	* @return JsonNode
+	* @implNote nodeTree.path("fieldName").asText()
+	*/
+	public JsonNode readJsonFile(String jsonpath) {
+		JsonNode root = null;
+		try {
+		ObjectMapper mapper = new ObjectMapper();
+		root = mapper.readTree(new File(jsonpath));
+		// Get Name
+	} catch (JsonGenerationException e) {
+		e.printStackTrace();
+	} catch (JsonMappingException e) {
+		e.printStackTrace();
+	} catch (IOException e) {
+		e.printStackTrace();
+	}
+	return root;
+	}
 }
