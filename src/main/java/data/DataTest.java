@@ -35,9 +35,20 @@ public class DataTest {
 		users[0][0] = "Admin";
 		users[0][1] = "admin123";
 		
-		//users[1][0] = "Admin2";
-		//users[1][1] = "admin123";
+		users[1][0] = "Admin2";
+		users[1][1] = "admin123";
 		
+		return users;
+		
+	}
+	
+	@DataProvider(name="user")
+	public Object[][] getSingleUserPassword(){
+		Object[][] users = new Object[1][2];
+		
+		users[0][0] = "Admin";
+		users[0][1] = "admin123";
+
 		return users;
 		
 	}
