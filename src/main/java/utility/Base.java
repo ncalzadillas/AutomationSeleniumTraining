@@ -2,11 +2,15 @@ package utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -628,5 +632,57 @@ public class Base {
 		e.printStackTrace();
 	}
 	return root;
+	}
+	
+	public void CheckPageLinks(By locator) {
+		List<WebElement> links = findElements(locator);
+		List<String> validLinks = new ArrayList<String>();
+		List<String> brokenLinks = new ArrayList<String>();
+		String url = "";
+		
+		HttpURLConnection httpConnection = null;
+		int responseCode = 200;
+		
+		Iterator<WebElement> it = links.iterator();
+		
+		while(it.hasNext()) {
+			url = it.next().getAttribute("href");
+			
+			if(url==null || url.isEmpty()) {
+				reporter(url + "URL is not configured or it is Empty");
+				continue;
+			}
+			
+			try {
+				httpConnection = (HttpURLConnection)(new URL(url).openConnection());
+				httpConnection.setRequestMethod("HEAD");
+				httpConnection.connect();
+				responseCode = httpConnection.getResponseCode();
+				
+				if(responseCode>=400) {
+					reporter("ERR BROKEN LINK --> " + url);
+					reporter("STATUS CODE: --> " + responseCode);
+					brokenLinks.add(url);
+				}else {
+					reporter("VALID LINK --> " + url);
+					reporter("STATUS CODE: --> " + responseCode);
+					validLinks.add(url);
+				}
+				
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}//end While
+		
+		reporter("BROKEN LINKS --> " + brokenLinks.size());
+		reporter("VALID LINKS --> " + validLinks.size());
+		
+		if(brokenLinks.size()>0) {
+			for(String link : brokenLinks) {
+				reporter(link);
+			}
+		}
+		
 	}
 }

@@ -9,6 +9,7 @@ public class Menu extends Base {
 	
 	By list_firstMenu = By.xpath("//*[contains(@class,'first-level-list-item')]/a/b");
 	By list_subMenu = By.xpath("//*[contains(@class,'first-level-list-item')]//ul//a");
+	By list_links = By.tagName("a");
 	
 	public Menu(WebDriver driver) {
 		super(driver);
@@ -17,6 +18,10 @@ public class Menu extends Base {
 	public void selectMenuSubMenu(String menu, String subMenu) {
 		selectElementByValue(list_firstMenu,menu);
 		selectElementByValue(list_subMenu,subMenu);
+	}
+	
+	public void verifyPageLinks() {
+		CheckPageLinks(list_links);
 	}
 
 }
