@@ -323,7 +323,7 @@ public class Base {
 	 * @return N/A
 	 */
 	public void reporter(String message) {
-		Reporter.log(message);
+		Reporter.log(message, true);
 	}
 	
 	/**

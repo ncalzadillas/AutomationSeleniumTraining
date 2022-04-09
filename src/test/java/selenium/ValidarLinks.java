@@ -23,7 +23,7 @@ public class ValidarLinks {
 		Base.page.getBase().openUrl(url);
 	}
 	
-	@Test(dataProvider="users", dataProviderClass = DataTest.class)
+	@Test(dataProvider="user", dataProviderClass = DataTest.class)
 	public void validarLinsEnHRM(String user, String password) {
 		Base.page.getLogin().loginSuccess(user, password);
 		Base.page.getMenu().verifyPageLinks();
